@@ -28,7 +28,6 @@ namespace Timer
         private bool _allowOvertime = false;
 
         public event PropertyChangedEventHandler? PropertyChanged;
-
         public double Value
         {
             get => _currentValue;
@@ -116,7 +115,7 @@ namespace Timer
             {
                 _timer.Stop();
                 Value = 0;
-                if (txtHrs.IsReadOnly)
+                if (!txtHrs.IsEnabled)
                     ToggleReadonly();
                 _player.Stop();
             }
