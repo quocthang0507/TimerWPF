@@ -1,9 +1,10 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Diagnostics;
+using System.Media;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace Timer
@@ -19,6 +20,9 @@ namespace Timer
         private TimeSpan endTime;
         private System.Timers.Timer timer;
         private double currentValue = 0;
+        private int lastTimeToAlert = 0;
+        private string ringtone = "defaultRingtone";
+
         public event PropertyChangedEventHandler? PropertyChanged;
 
         public double Value
@@ -47,7 +51,7 @@ namespace Timer
             {
                 timer.Stop();
                 Value = 0;
-                MessageBox.Show("Hết giờ!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Warning);
+                PlayRingtone();
             }
         }
 
@@ -114,7 +118,67 @@ namespace Timer
 
         private void btnSetting_Click(object sender, RoutedEventArgs e)
         {
+            ContextMenu contextMenu = FindResource("contextMenu") as ContextMenu;
+            contextMenu.PlacementTarget = sender as Button;
+            contextMenu.IsOpen = true;
+        }
 
+        private void MenuItemRingtone_Click(object sender, RoutedEventArgs e)
+        {
+            MenuItem? selectedMenu = sender as MenuItem;
+            ContextMenu contextMenu = FindResource("contextMenu") as ContextMenu;
+            foreach (var item in contextMenu.Items)
+            {
+                MenuItem? menuItem = item as MenuItem;
+                if (item is MenuItem && menuItem.Name != selectedMenu.Name)
+                    switch (menuItem.Name)
+                    {
+                        case "defaultRingtone":
+                        case "ringtone1":
+                        case "ringtone2":
+                        case "ringtone3":
+                            menuItem.IsChecked = false;
+                            break;
+                    }
+            }
+            selectedMenu.IsChecked = true;
+            ringtone = selectedMenu.Name;
+        }
+
+        private void MenuItemAlert_Click(object sender, RoutedEventArgs e)
+        {
+            MenuItem? selectedMenu = sender as MenuItem;
+            ContextMenu contextMenu = FindResource("contextMenu") as ContextMenu;
+            foreach (var item in contextMenu.Items)
+            {
+                MenuItem? menuItem = item as MenuItem;
+                if (item is MenuItem && menuItem.Name != selectedMenu.Name)
+                    switch (menuItem.Name)
+                    {
+                        case "zeroSecond":
+                        case "threeSeconds":
+                        case "fiveSeconds":
+                        case "tenSeconds":
+                            menuItem.IsChecked = false;
+                            break;
+                    }
+            }
+            selectedMenu.IsChecked = true;
+            switch (selectedMenu.Name)
+            {
+                case "zeroSecond":
+                    lastTimeToAlert = 0;
+                    break;
+                case "threeSeconds":
+                    lastTimeToAlert = 3;
+                    break;
+                case "fiveSeconds":
+                    lastTimeToAlert = 5;
+                    break;
+                case "tenSeconds":
+                    lastTimeToAlert = 10;
+                    break;
+            }
         }
         #endregion
 
@@ -138,6 +202,37 @@ namespace Timer
             {
                 lblRemaining.Text = text;
             });
+            if (remainingTime > 0 && remainingTime <= lastTimeToAlert)
+                PlayAlert();
+        }
+
+        private void PlayAlert()
+        {
+            SoundPlayer player = new(Properties.Resources.beep);
+            player.Load();
+            player.Play();
+        }
+
+        private void PlayRingtone()
+        {
+            SoundPlayer player = new();
+            switch (ringtone)
+            {
+                case "defaultRingtone":
+                    MessageBox.Show("Hết giờ!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                    return;
+                case "ringtone1":
+                    player = new(Properties.Resources.siren_alert);
+                    break;
+                case "ringtone2":
+                    player = new(Properties.Resources.attention);
+                    break;
+                case "ringtone3":
+                    player = new(Properties.Resources.success);
+                    break;
+            }
+            player.Load();
+            player.Play();
         }
 
         #region INotifyPropertyChanged

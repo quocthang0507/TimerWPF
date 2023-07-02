@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Timer"
         mc:Ignorable="d"
         xmlns:xrpb="http://XamlRadialProgressBar/DotNet"
-        Title="Timer" Height="250" Width="500" ResizeMode="NoResize" Topmost="True" FontSize="16"
+        Title="Timer" Height="250" Width="500" ResizeMode="NoResize" Topmost="True"
         UseLayoutRounding="True" SnapsToDevicePixels="True">
     <Window.Resources>
         <Style TargetType="TextBox">
@@ -14,6 +14,7 @@
             <Setter Property="VerticalContentAlignment" Value="Center"/>
             <Setter Property="Margin" Value="2"/>
             <Setter Property="Padding" Value="5,0,0,0"/>
+            <Setter Property="FontSize" Value="20pt"/>
         </Style>
         <Style TargetType="TextBlock">
             <Setter Property="Margin" Value="5,0"/>
@@ -24,6 +25,17 @@
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Background" Value="Transparent"/>
         </Style>
+        <ContextMenu x:Key="contextMenu">
+            <MenuItem x:Name="defaultRingtone" Header="Nhạc chuông mặc định" IsCheckable="True" IsChecked="True" Click="MenuItemRingtone_Click"/>
+            <MenuItem x:Name="ringtone1" Header="Nhạc chuông 1" IsCheckable="True" Click="MenuItemRingtone_Click"/>
+                <MenuItem x:Name="ringtone2" Header="Nhạc chuông 2" IsCheckable="True" Click="MenuItemRingtone_Click"/>
+                <MenuItem x:Name="ringtone3" Header="Nhạc chuông 3" IsCheckable="True" Click="MenuItemRingtone_Click"/>
+                <Separator />
+                <MenuItem x:Name="zeroSecond" Header="Không báo giây cuối cùng" IsCheckable="True" IsChecked="True" Click="MenuItemAlert_Click"/>
+                <MenuItem x:Name="threeSeconds" Header="Báo 3 giây cuối cùng" IsCheckable="True" Click="MenuItemAlert_Click"/>
+                <MenuItem x:Name="fiveSeconds" Header="Báo 5 giây cuối cùng" IsCheckable="True" Click="MenuItemAlert_Click"/>
+                <MenuItem x:Name="tenSeconds" Header="Báo 10 giây cuối cùng" IsCheckable="True" Click="MenuItemAlert_Click"/>
+        </ContextMenu>
     </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
@@ -37,9 +49,9 @@
                                 Value="{Binding Value, UpdateSourceTrigger=PropertyChanged}"/>
         <Grid Grid.Column="1" Margin="10">
             <Grid.RowDefinitions>
-                <RowDefinition />
-                <RowDefinition />
-                <RowDefinition />
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="0.75*"/>
+                <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -48,12 +60,12 @@
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
-                    <RowDefinition/>
+                    <RowDefinition Height="2*"/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
-                <TextBox x:Name="txtHrs" Text="0" PreviewTextInput="TextBox_PreviewTextInput" DataObject.Pasting="TextBox_Pasting"/>
-                <TextBox x:Name="txtMin" Text="0" Grid.Column="1" PreviewTextInput="TextBox_PreviewTextInput" DataObject.Pasting="TextBox_Pasting"/>
-                <TextBox x:Name="txtSec" Text="10" Grid.Column="2" PreviewTextInput="TextBox_PreviewTextInput" DataObject.Pasting="TextBox_Pasting"/>
+                <TextBox x:Name="txtHrs" Text="0" PreviewTextInput="TextBox_PreviewTextInput" DataObject.Pasting="TextBox_Pasting" ToolTip="Giờ"/>
+                <TextBox x:Name="txtMin" Text="0" Grid.Column="1" PreviewTextInput="TextBox_PreviewTextInput" DataObject.Pasting="TextBox_Pasting" ToolTip="Phút"/>
+                <TextBox x:Name="txtSec" Text="10" Grid.Column="2" PreviewTextInput="TextBox_PreviewTextInput" DataObject.Pasting="TextBox_Pasting" ToolTip="Giây"/>
                 <TextBlock Text="hrs" Grid.Row="1"/>
                 <TextBlock Text="min" Grid.Row="1" Grid.Column="1"/>
                 <TextBlock Text="sec" Grid.Row="1" Grid.Column="2"/>
@@ -65,54 +77,20 @@
                     <ColumnDefinition />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
-                <Button x:Name="btnStart" ToolTip="Start" Click="btnStart_Click">
+                <Button x:Name="btnStart" ToolTip="Bắt đầu" Click="btnStart_Click">
                     <Image Source="Resources\start.png"/>
                 </Button>
-                <Button x:Name="btnPause" Grid.Column="1" ToolTip="Pause" Click="btnPause_Click">
+                <Button x:Name="btnPause" Grid.Column="1" ToolTip="Tạm dừng" Click="btnPause_Click">
                     <Image Source="Resources\pause.png"/>
                 </Button>
-                <Button x:Name="btnStop" Grid.Column="2" ToolTip="Stop" Click="btnStop_Click">
+                <Button x:Name="btnStop" Grid.Column="2" ToolTip="Kết thúc" Click="btnStop_Click">
                     <Image Source="Resources\stop.png"/>
                 </Button>
-                <Button x:Name="btnSetting" Grid.Column="3" ToolTip="Setting" Click="btnSetting_Click">
-                    <Button.Style>
-                        <Style TargetType="{x:Type Button}">
-                            <Style.Triggers>
-                                <EventTrigger RoutedEvent="Click">
-                                    <EventTrigger.Actions>
-                                        <BeginStoryboard>
-                                            <Storyboard>
-                                                <BooleanAnimationUsingKeyFrames Storyboard.TargetProperty="ContextMenu.IsOpen">
-                                                    <DiscreteBooleanKeyFrame KeyTime="0:0:0" Value="True"/>
-                                                </BooleanAnimationUsingKeyFrames>
-                                            </Storyboard>
-                                        </BeginStoryboard>
-                                    </EventTrigger.Actions>
-                                </EventTrigger>
-                            </Style.Triggers>
-                            <Setter Property="ContextMenu">
-                                <Setter.Value>
-                                    <ContextMenu>
-                                        <MenuItem Header="Nhạc chuông 1" IsCheckable="True" IsChecked="True"/>
-                                        <MenuItem Header="Nhạc chuông 2" IsCheckable="True" />
-                                        <MenuItem Header="Nhạc chuông 3" IsCheckable="True"/>
-                                        <Separator />
-                                        <MenuItem Header="Không báo giây cuối cùng" IsCheckable="True" IsChecked="True"/>
-                                        <MenuItem Header="Báo 3 giây cuối cùng" IsCheckable="True"/>
-                                        <MenuItem Header="Báo 5 giây cuối cùng" IsCheckable="True"/>
-                                        <MenuItem Header="Báo 10 giây cuối cùng" IsCheckable="True"/>
-                                    </ContextMenu >
-                                </Setter.Value>
-                            </Setter>
-                            <Setter Property="Background" Value="Transparent"/>
-                            <Setter Property="Margin" Value="10,0,10,10"/>
-                            <Setter Property="BorderThickness" Value="0"/>
-                        </Style>
-                    </Button.Style>
+                <Button x:Name="btnSetting" Grid.Column="3" ToolTip="Cài đặt" Click="btnSetting_Click">
                     <Image Source="Resources\setting.png"/>
                 </Button>
             </Grid>
-            <TextBlock x:Name="lblRemaining" Grid.Row="2" Text="00:00:00" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="40pt"/>
+            <TextBlock x:Name="lblRemaining" Grid.Row="2" Text="00:00:00" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="40pt" ToolTip="Thời gian còn lại"/>
         </Grid>
     </Grid>
 </Window>
