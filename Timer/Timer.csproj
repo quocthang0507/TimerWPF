@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net7.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\pause.png" />
+    <None Remove="Resources\setting.png" />
+    <None Remove="Resources\start.png" />
+    <None Remove="Resources\stop.png" />
+    <None Remove="Resources\timer.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="XamlRadialProgressBar" Version="1.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\pause.png" />
+    <Resource Include="Resources\setting.png" />
+    <Resource Include="Resources\start.png" />
+    <Resource Include="Resources\stop.png" />
+    <Resource Include="Resources\timer.ico" />
+  </ItemGroup>
+
+</Project>
