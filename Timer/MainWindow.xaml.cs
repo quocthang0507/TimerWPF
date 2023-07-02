@@ -17,20 +17,21 @@ namespace Timer
         [GeneratedRegex("[^0-9]+")]
         private static partial Regex DigitRegex();
         private static readonly Regex _regex = DigitRegex();
-        private TimeSpan endTime;
-        private System.Timers.Timer timer;
-        private double currentValue = 0;
-        private int lastTimeToAlert = 0;
-        private string ringtone = "defaultRingtone";
+        private TimeSpan _endTime;
+        private System.Timers.Timer _timer;
+        private double _currentValue = 0;
+        private int _lastTimeToAlert = 0;
+        private string _ringtone = "defaultRingtone";
+        private SoundPlayer _player = new();
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
         public double Value
         {
-            get => currentValue;
+            get => _currentValue;
             set
             {
-                this.currentValue = value;
+                this._currentValue = value;
                 OnPropertyChanged();
             }
         }
@@ -46,10 +47,10 @@ namespace Timer
         private void Timer_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)
         {
             Value++;
-            double totalSeconds = endTime.TotalSeconds;
+            double totalSeconds = _endTime.TotalSeconds;
             if (Value >= totalSeconds)
             {
-                timer.Stop();
+                _timer.Stop();
                 Value = 0;
                 PlayRingtone();
             }
@@ -74,21 +75,21 @@ namespace Timer
 
         private void btnStart_Click(object sender, RoutedEventArgs e)
         {
-            if (timer == null || Value == 0)
+            if (_timer == null || Value == 0)
             {
                 if (int.TryParse(txtHrs.Text, out var hrs) &&
                 int.TryParse(txtMin.Text, out var min) &&
                 int.TryParse(txtSec.Text, out var sec))
                 {
-                    endTime = new TimeSpan(hrs, min, sec);
-                    double totalSeconds = endTime.TotalSeconds;
-                    timer = new(1000);
+                    _endTime = new TimeSpan(hrs, min, sec);
+                    double totalSeconds = _endTime.TotalSeconds;
+                    _timer = new(1000);
 
-                    timer.Elapsed += Timer_Elapsed;
+                    _timer.Elapsed += Timer_Elapsed;
                     progressBar.Maximum = totalSeconds;
 
                     ToggleReadonly();
-                    timer.Start();
+                    _timer.Start();
                     UpdateTimeLabel((int)totalSeconds);
                 }
                 else
@@ -96,23 +97,24 @@ namespace Timer
             }
             else
             {
-                timer.Start();
+                _timer.Start();
             }
         }
 
         private void btnPause_Click(object sender, RoutedEventArgs e)
         {
-            timer?.Stop();
+            _timer?.Stop();
         }
 
         private void btnStop_Click(object sender, RoutedEventArgs e)
         {
-            if (timer != null)
+            if (_timer != null)
             {
-                timer.Stop();
+                _timer.Stop();
                 Value = 0;
                 if (txtHrs.IsReadOnly)
                     ToggleReadonly();
+                _player.Stop();
             }
         }
 
@@ -142,7 +144,7 @@ namespace Timer
                     }
             }
             selectedMenu.IsChecked = true;
-            ringtone = selectedMenu.Name;
+            _ringtone = selectedMenu.Name;
         }
 
         private void MenuItemAlert_Click(object sender, RoutedEventArgs e)
@@ -167,16 +169,16 @@ namespace Timer
             switch (selectedMenu.Name)
             {
                 case "zeroSecond":
-                    lastTimeToAlert = 0;
+                    _lastTimeToAlert = 0;
                     break;
                 case "threeSeconds":
-                    lastTimeToAlert = 3;
+                    _lastTimeToAlert = 3;
                     break;
                 case "fiveSeconds":
-                    lastTimeToAlert = 5;
+                    _lastTimeToAlert = 5;
                     break;
                 case "tenSeconds":
-                    lastTimeToAlert = 10;
+                    _lastTimeToAlert = 10;
                     break;
             }
         }
@@ -202,37 +204,36 @@ namespace Timer
             {
                 lblRemaining.Text = text;
             });
-            if (remainingTime > 0 && remainingTime <= lastTimeToAlert)
+            if (remainingTime > 0 && remainingTime <= _lastTimeToAlert)
                 PlayAlert();
         }
 
         private void PlayAlert()
         {
-            SoundPlayer player = new(Properties.Resources.beep);
-            player.Load();
-            player.Play();
+            _player = new(Properties.Resources.beep);
+            _player.Load();
+            _player.Play();
         }
 
         private void PlayRingtone()
         {
-            SoundPlayer player = new();
-            switch (ringtone)
+            switch (_ringtone)
             {
                 case "defaultRingtone":
                     MessageBox.Show("Hết giờ!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Exclamation);
                     return;
                 case "ringtone1":
-                    player = new(Properties.Resources.siren_alert);
+                    _player = new(Properties.Resources.siren_alert);
                     break;
                 case "ringtone2":
-                    player = new(Properties.Resources.attention);
+                    _player = new(Properties.Resources.attention);
                     break;
                 case "ringtone3":
-                    player = new(Properties.Resources.success);
+                    _player = new(Properties.Resources.success);
                     break;
             }
-            player.Load();
-            player.Play();
+            _player.Load();
+            _player.Play();
         }
 
         #region INotifyPropertyChanged
@@ -241,7 +242,7 @@ namespace Timer
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
-            double totalSeconds = endTime.TotalSeconds;
+            double totalSeconds = _endTime.TotalSeconds;
             if (Value > 0)
                 UpdateTimeLabel((int)(totalSeconds - Value));
             else UpdateTimeLabel(0);

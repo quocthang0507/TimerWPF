@@ -45,7 +45,7 @@
         <xrpb:RadialProgressBar x:Name="progressBar" ArcWidth="50" Width="200" Height="200"  ArcBackgroundWidth="50" 
                                 VerticalAlignment="Center" HorizontalAlignment="Center"
                                 ArcDirection="Counterclockwise" ArcRotationDegree="90"
-                                Foreground="DarkSeaGreen" OuterBackgroundBrush="DarkSlateGray"
+                                Foreground="RoyalBlue" OuterBackgroundBrush="Gainsboro"
                                 Value="{Binding Value, UpdateSourceTrigger=PropertyChanged}"/>
         <Grid Grid.Column="1" Margin="10">
             <Grid.RowDefinitions>
