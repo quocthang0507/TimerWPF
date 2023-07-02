@@ -5,9 +5,12 @@
     <TargetFramework>net7.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
+    <ApplicationIcon>Resources\timer_2.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\alarm.wav" />
+    <None Remove="Resources\alarm_1.wav" />
     <None Remove="Resources\attention.wav" />
     <None Remove="Resources\beep.wav" />
     <None Remove="Resources\pause.png" />
@@ -17,6 +20,7 @@
     <None Remove="Resources\stop.png" />
     <None Remove="Resources\success.wav" />
     <None Remove="Resources\timer.ico" />
+    <None Remove="Resources\timer_2.ico" />
   </ItemGroup>
 
   <ItemGroup>
@@ -24,6 +28,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Resources\alarm.wav" />
+    <Resource Include="Resources\alarm_1.wav" />
     <Resource Include="Resources\attention.wav" />
     <Resource Include="Resources\beep.wav" />
     <Resource Include="Resources\pause.png" />
@@ -33,6 +39,7 @@
     <Resource Include="Resources\stop.png" />
     <Resource Include="Resources\success.wav" />
     <Resource Include="Resources\timer.ico" />
+    <Resource Include="Resources\timer_2.ico" />
   </ItemGroup>
 
   <ItemGroup>

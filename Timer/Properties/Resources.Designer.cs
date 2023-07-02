@@ -63,6 +63,24 @@ namespace Timer.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
         /// </summary>
+        internal static System.IO.UnmanagedMemoryStream alarm {
+            get {
+                return ResourceManager.GetStream("alarm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
+        /// </summary>
+        internal static System.IO.UnmanagedMemoryStream alarm_1 {
+            get {
+                return ResourceManager.GetStream("alarm_1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
+        /// </summary>
         internal static System.IO.UnmanagedMemoryStream attention {
             get {
                 return ResourceManager.GetStream("attention", resourceCulture);
@@ -93,6 +111,26 @@ namespace Timer.Properties {
         internal static System.IO.UnmanagedMemoryStream success {
             get {
                 return ResourceManager.GetStream("success", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] timer {
+            get {
+                object obj = ResourceManager.GetObject("timer", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] timer_2 {
+            get {
+                object obj = ResourceManager.GetObject("timer_2", resourceCulture);
+                return ((byte[])(obj));
             }
         }
     }

@@ -3,9 +3,11 @@ using System.ComponentModel;
 using System.Media;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
+using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace Timer
 {
@@ -23,6 +25,7 @@ namespace Timer
         private int _lastTimeToAlert = 0;
         private string _ringtone = "defaultRingtone";
         private SoundPlayer _player = new();
+        private bool _allowOvertime = false;
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -44,11 +47,11 @@ namespace Timer
 
         #region Events
 
-        private void Timer_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)
+        private void Timer_Elapsed(object? sender, ElapsedEventArgs e)
         {
             Value++;
             double totalSeconds = _endTime.TotalSeconds;
-            if (Value >= totalSeconds)
+            if (!_allowOvertime && Value >= totalSeconds)
             {
                 _timer.Stop();
                 Value = 0;
@@ -90,6 +93,7 @@ namespace Timer
 
                     ToggleReadonly();
                     _timer.Start();
+                    lblRemaining.Foreground = Brushes.Black;
                     UpdateTimeLabel((int)totalSeconds);
                 }
                 else
@@ -136,9 +140,12 @@ namespace Timer
                     switch (menuItem.Name)
                     {
                         case "defaultRingtone":
+                        case "ringtone0":
                         case "ringtone1":
                         case "ringtone2":
                         case "ringtone3":
+                        case "ringtone4":
+                        case "ringtone5":
                             menuItem.IsChecked = false;
                             break;
                     }
@@ -182,8 +189,15 @@ namespace Timer
                     break;
             }
         }
+
+        private void MenuItemOvertime_Click(object sender, RoutedEventArgs e)
+        {
+            MenuItem? selectedMenu = sender as MenuItem;
+            _allowOvertime = selectedMenu.IsChecked;
+        }
         #endregion
 
+        #region Methods
         private static bool IsTextAllowed(string text)
         {
             return !_regex.IsMatch(text);
@@ -191,9 +205,9 @@ namespace Timer
 
         private void ToggleReadonly()
         {
-            txtHrs.IsReadOnly = !txtHrs.IsReadOnly;
-            txtMin.IsReadOnly = !txtMin.IsReadOnly;
-            txtSec.IsReadOnly = !txtSec.IsReadOnly;
+            txtHrs.IsEnabled = !txtHrs.IsEnabled;
+            txtMin.IsEnabled = !txtMin.IsEnabled;
+            txtSec.IsEnabled = !txtSec.IsEnabled;
         }
 
         private void UpdateTimeLabel(int remainingTime)
@@ -203,9 +217,17 @@ namespace Timer
             Dispatcher.Invoke(() =>
             {
                 lblRemaining.Text = text;
+                if (_allowOvertime && Value >= _endTime.TotalSeconds)
+                    lblRemaining.Foreground = Brushes.Red;
             });
             if (remainingTime > 0 && remainingTime <= _lastTimeToAlert)
+            {
                 PlayAlert();
+                Dispatcher.Invoke(() =>
+                {
+                    lblRemaining.Foreground = Brushes.Red;
+                });
+            }
         }
 
         private void PlayAlert()
@@ -222,6 +244,12 @@ namespace Timer
                 case "defaultRingtone":
                     MessageBox.Show("Hết giờ!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Exclamation);
                     return;
+                case "ringtone0":
+                    for (int i = 1; i <= 10; i++)
+                    {
+                        Console.Beep();
+                    }
+                    return;
                 case "ringtone1":
                     _player = new(Properties.Resources.siren_alert);
                     break;
@@ -231,13 +259,19 @@ namespace Timer
                 case "ringtone3":
                     _player = new(Properties.Resources.success);
                     break;
+                case "ringtone4":
+                    _player = new(Properties.Resources.alarm);
+                    break;
+                case "ringtone5":
+                    _player = new(Properties.Resources.alarm_1);
+                    break;
             }
             _player.Load();
             _player.Play();
         }
+        #endregion
 
         #region INotifyPropertyChanged
-
         private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -248,6 +282,5 @@ namespace Timer
             else UpdateTimeLabel(0);
         }
         #endregion
-
     }
 }

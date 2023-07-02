@@ -6,8 +6,8 @@
         xmlns:local="clr-namespace:Timer"
         mc:Ignorable="d"
         xmlns:xrpb="http://XamlRadialProgressBar/DotNet"
-        Title="Timer" Height="250" Width="500" ResizeMode="NoResize" Topmost="True"
-        UseLayoutRounding="True" SnapsToDevicePixels="True">
+        Title="Timer" Height="300" Width="600" ResizeMode="NoResize" Topmost="True"
+        UseLayoutRounding="True" SnapsToDevicePixels="True" Icon="Resources/timer_2.ico">
     <Window.Resources>
         <Style TargetType="TextBox">
             <Setter Property="HorizontalContentAlignment" Value="Left"/>
@@ -26,15 +26,20 @@
             <Setter Property="Background" Value="Transparent"/>
         </Style>
         <ContextMenu x:Key="contextMenu">
+            <MenuItem x:Name="overtime" Header="Cho phép quá giờ" IsCheckable="True" Click="MenuItemOvertime_Click"/>
+            <Separator />
             <MenuItem x:Name="defaultRingtone" Header="Nhạc chuông mặc định" IsCheckable="True" IsChecked="True" Click="MenuItemRingtone_Click"/>
+            <MenuItem x:Name="ringtone0" Header="Tiếng Beep" IsCheckable="True" Click="MenuItemRingtone_Click"/>
             <MenuItem x:Name="ringtone1" Header="Nhạc chuông 1" IsCheckable="True" Click="MenuItemRingtone_Click"/>
-                <MenuItem x:Name="ringtone2" Header="Nhạc chuông 2" IsCheckable="True" Click="MenuItemRingtone_Click"/>
-                <MenuItem x:Name="ringtone3" Header="Nhạc chuông 3" IsCheckable="True" Click="MenuItemRingtone_Click"/>
-                <Separator />
-                <MenuItem x:Name="zeroSecond" Header="Không báo giây cuối cùng" IsCheckable="True" IsChecked="True" Click="MenuItemAlert_Click"/>
-                <MenuItem x:Name="threeSeconds" Header="Báo 3 giây cuối cùng" IsCheckable="True" Click="MenuItemAlert_Click"/>
-                <MenuItem x:Name="fiveSeconds" Header="Báo 5 giây cuối cùng" IsCheckable="True" Click="MenuItemAlert_Click"/>
-                <MenuItem x:Name="tenSeconds" Header="Báo 10 giây cuối cùng" IsCheckable="True" Click="MenuItemAlert_Click"/>
+            <MenuItem x:Name="ringtone2" Header="Nhạc chuông 2" IsCheckable="True" Click="MenuItemRingtone_Click"/>
+            <MenuItem x:Name="ringtone3" Header="Nhạc chuông 3" IsCheckable="True" Click="MenuItemRingtone_Click"/>
+            <MenuItem x:Name="ringtone4" Header="Nhạc chuông 4" IsCheckable="True" Click="MenuItemRingtone_Click"/>
+            <MenuItem x:Name="ringtone5" Header="Nhạc chuông 5" IsCheckable="True" Click="MenuItemRingtone_Click"/>
+            <Separator />
+            <MenuItem x:Name="zeroSecond" Header="Không báo giây cuối cùng" IsCheckable="True" IsChecked="True" Click="MenuItemAlert_Click"/>
+            <MenuItem x:Name="threeSeconds" Header="Báo 3 giây cuối cùng" IsCheckable="True" Click="MenuItemAlert_Click"/>
+            <MenuItem x:Name="fiveSeconds" Header="Báo 5 giây cuối cùng" IsCheckable="True" Click="MenuItemAlert_Click"/>
+            <MenuItem x:Name="tenSeconds" Header="Báo 10 giây cuối cùng" IsCheckable="True" Click="MenuItemAlert_Click"/>
         </ContextMenu>
     </Window.Resources>
     <Grid>
@@ -42,7 +47,7 @@
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <xrpb:RadialProgressBar x:Name="progressBar" ArcWidth="50" Width="200" Height="200"  ArcBackgroundWidth="50" 
+        <xrpb:RadialProgressBar x:Name="progressBar" ArcWidth="50" Width="250" Height="250"  ArcBackgroundWidth="50" 
                                 VerticalAlignment="Center" HorizontalAlignment="Center"
                                 ArcDirection="Counterclockwise" ArcRotationDegree="90"
                                 Foreground="RoyalBlue" OuterBackgroundBrush="Gainsboro"
@@ -66,9 +71,9 @@
                 <TextBox x:Name="txtHrs" Text="0" PreviewTextInput="TextBox_PreviewTextInput" DataObject.Pasting="TextBox_Pasting" ToolTip="Giờ"/>
                 <TextBox x:Name="txtMin" Text="0" Grid.Column="1" PreviewTextInput="TextBox_PreviewTextInput" DataObject.Pasting="TextBox_Pasting" ToolTip="Phút"/>
                 <TextBox x:Name="txtSec" Text="10" Grid.Column="2" PreviewTextInput="TextBox_PreviewTextInput" DataObject.Pasting="TextBox_Pasting" ToolTip="Giây"/>
-                <TextBlock Text="hrs" Grid.Row="1"/>
-                <TextBlock Text="min" Grid.Row="1" Grid.Column="1"/>
-                <TextBlock Text="sec" Grid.Row="1" Grid.Column="2"/>
+                <TextBlock Text="hours" Grid.Row="1"/>
+                <TextBlock Text="minutes" Grid.Row="1" Grid.Column="1"/>
+                <TextBlock Text="seconds" Grid.Row="1" Grid.Column="2"/>
             </Grid>
             <Grid Grid.Row="1">
                 <Grid.ColumnDefinitions>
@@ -90,7 +95,7 @@
                     <Image Source="Resources\setting.png"/>
                 </Button>
             </Grid>
-            <TextBlock x:Name="lblRemaining" Grid.Row="2" Text="00:00:00" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="40pt" ToolTip="Thời gian còn lại"/>
+            <TextBlock x:Name="lblRemaining" Grid.Row="2" Text="00:00:00" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="50pt" ToolTip="Thời gian còn lại"/>
         </Grid>
     </Grid>
 </Window>
